@@ -1,0 +1,729 @@
+/* RESET & GLOBAL VARIABLE DEFINITIONS */
+:root {
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --text-dark: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --radius: 12px;
+
+  /* Theme Defaults (Diet - Emerald) */
+  --diet-primary: #059669;
+  --diet-hover: #047857;
+  --diet-bg: #ecfdf5;
+
+  /* Theme (Workout - Energetic Crimson Red) */
+  --workout-primary: #dc2626;
+  --workout-hover: #b91c1c;
+  --workout-bg: #fef2f2;
+
+  /* Theme (Study - Deep Indigo/Blue) */
+  --study-primary: #4f46e5;
+  --study-hover: #4338ca;
+  --study-bg: #e0e7ff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-dark);
+  line-height: 1.5;
+  padding-bottom: 40px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+/* NAVBAR */
+.navbar-header {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow);
+}
+
+.nav-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.5rem;
+}
+
+.brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand i {
+  color: var(--diet-primary);
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-dark);
+  cursor: pointer;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-btn {
+  background: transparent;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+/* NAVBAR TAB COLOR CUSTOMIZATIONS */
+.nav-btn[data-tab="diet"]:hover { background: var(--diet-bg); color: var(--diet-primary); }
+.nav-btn[data-tab="diet"].active { background: var(--diet-bg); color: var(--diet-primary); }
+
+.nav-btn[data-tab="workout"]:hover { background: var(--workout-bg); color: var(--workout-primary); }
+.nav-btn[data-tab="workout"].active { background: var(--workout-bg); color: var(--workout-primary); }
+
+.nav-btn[data-tab="study"]:hover { background: var(--study-bg); color: var(--study-primary); }
+.nav-btn[data-tab="study"].active { background: var(--study-bg); color: var(--study-primary); }
+
+/* DATE BAR */
+.date-bar-container {
+  max-width: 1100px;
+  margin: 1.5rem auto 0;
+  padding: 0 1.5rem;
+}
+
+.date-bar {
+  background: var(--bg-card);
+  padding: 0.8rem 1.2rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.date-picker-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #334155;
+  font-weight: 600;
+}
+
+.date-picker-wrap input[type="date"] {
+  border: 1px solid var(--border-color);
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  color: var(--text-dark);
+}
+
+.date-quick-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-today {
+  background: #f1f5f9;
+  border: 1px solid var(--border-color);
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-today:hover {
+  background: #334155;
+  color: #fff;
+}
+
+.btn-tomorrow {
+  background: #f1f5f9;
+  color: #334155;
+  border-color: var(--border-color);
+}
+
+.btn-tomorrow:hover {
+  background: #0f172a;
+  color: #fff;
+}
+
+.btn-danger-sm {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-danger-sm:hover {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+/* MAIN CONTENT CONTAINER */
+.app-main {
+  max-width: 1100px;
+  margin: 1.5rem auto 0;
+  padding: 0 1.5rem;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* ==================== 1. DIET SECTION THEME (EMERALD GREEN) ==================== */
+#section-diet h2 { color: var(--diet-primary); }
+#section-diet .btn-pdf { background: var(--diet-primary); }
+#section-diet .btn-pdf:hover { background: var(--diet-hover); }
+#section-diet .btn-primary-trigger { background: var(--diet-primary); box-shadow: 0 2px 4px rgba(5, 150, 105, 0.2); }
+#section-diet .btn-primary-trigger:hover { background: var(--diet-hover); }
+
+/* ==================== 2. WORKOUT SECTION THEME (POWER RED) ==================== */
+#section-workout h2 { color: var(--workout-primary); }
+#section-workout .btn-pdf { background: var(--workout-primary); }
+#section-workout .btn-pdf:hover { background: var(--workout-hover); }
+#section-workout .btn-primary-trigger { background: var(--workout-primary); box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2); }
+#section-workout .btn-primary-trigger:hover { background: var(--workout-hover); }
+
+/* ==================== 3. STUDY SECTION THEME (ROYAL INDIGO) ==================== */
+#section-study h2 { color: var(--study-primary); }
+#section-study .btn-pdf { background: var(--study-primary); }
+#section-study .btn-pdf:hover { background: var(--study-hover); }
+#section-study .btn-primary-trigger { background: var(--study-primary); box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2); }
+#section-study .btn-primary-trigger:hover { background: var(--study-hover); }
+
+/* SECTION HEADERS */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.section-header h2 {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 2px;
+}
+
+.btn-pdf {
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.2s;
+}
+
+/* ROUTINE ACTION BAR BUTTONS */
+.routine-action-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.btn-primary-trigger {
+  color: #ffffff;
+  border: none;
+  padding: 0.65rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-routine {
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-load-routine { background: #d1fae5; color: #065f46; }
+.btn-load-routine:hover { background: #a7f3d0; }
+
+.btn-save-routine { background: #f1f5f9; color: #334155; }
+.btn-save-routine:hover { background: #e2e8f0; }
+
+.btn-reset-routine { background: #fef3c7; color: #92400e; }
+.btn-reset-routine:hover { background: #fde68a; }
+
+.btn-clear-day { background: #fee2e2; color: #991b1b; }
+.btn-clear-day:hover { background: #fca5a5; }
+
+/* SUMMARY CARDS */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-card {
+  background: var(--bg-card);
+  padding: 1.2rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+
+.cal-color { background: #fee2e2; color: #ef4444; }
+.prot-color { background: #e0e7ff; color: #4f46e5; }
+.item-color { background: #d1fae5; color: #10b981; }
+
+.card-title {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.card-info h3 {
+  font-size: 1.3rem;
+  color: var(--text-dark);
+}
+
+/* FORM CARD & MODAL STYLES */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-card {
+  background: var(--bg-card);
+  width: 100%;
+  max-width: 480px;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  animation: modalSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalSlide {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-header {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+}
+
+.modal-header h3 {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.modal-close-btn:hover { background: #e2e8f0; }
+
+.modal-form {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.form-group input, .form-group select {
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  outline: none;
+  font-size: 0.95rem;
+}
+
+/* Modal theme focus colors */
+#dietModalOverlay .form-group input:focus, #dietModalOverlay .form-group select:focus { border-color: var(--diet-primary); }
+#workoutModalOverlay .form-group input:focus, #workoutModalOverlay .form-group select:focus { border-color: var(--workout-primary); }
+#studyModalOverlay .form-group input:focus, #studyModalOverlay .form-group select:focus { border-color: var(--study-primary); }
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 0.5rem;
+}
+
+.btn-cancel {
+  background: #f1f5f9;
+  color: var(--text-muted);
+  border: none;
+  padding: 0.65rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-add {
+  color: #fff;
+  border: none;
+  padding: 0.65rem 1.4rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#dietModalOverlay .btn-add { background: var(--diet-primary); }
+#workoutModalOverlay .btn-add { background: var(--workout-primary); }
+#studyModalOverlay .btn-add { background: var(--study-primary); }
+
+/* TABLES & RESPONSIVE DATA CARDS */
+.diet-items-wrapper, .workout-items-wrapper, .study-items-wrapper, .table-container {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.data-table th, .data-table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.9rem;
+}
+
+.data-table th {
+  background: #f8fafc;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.completed-row {
+  background-color: #f0fdf4;
+}
+
+.completed-row td {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+
+.completed-row .badge, .completed-row .btn-del, .completed-row input[type="checkbox"] {
+  text-decoration: none !important;
+}
+
+.btn-del {
+  background: transparent;
+  color: #ef4444;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.btn-del:hover { background: #fee2e2; }
+
+.badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.bg-p-high { background: #fee2e2; color: #ef4444; }
+.bg-p-med { background: #fef3c7; color: #d97706; }
+.bg-p-low { background: #e0e7ff; color: #4f46e5; }
+
+.badge-tag {
+  background: #f1f5f9;
+  color: var(--text-dark);
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+.empty-msg {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 2.5rem !important;
+  font-size: 0.95rem;
+}
+
+/* MOBILE RESPONSIVE CARD TRANSFORMATION */
+@media (max-width: 768px) {
+  .menu-toggle { display: block; }
+
+  .nav-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    flex-direction: column;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-menu.show { display: flex; }
+
+  .date-bar {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .date-picker-wrap { justify-content: space-between; }
+  .date-quick-actions { width: 100%; flex-wrap: wrap; }
+  .btn-today, .btn-danger-sm { flex: 1; justify-content: center; font-size: 10px; }
+  .btn-tomorrow{font-size: 9px;}
+
+   .routine-action-bar {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .btn-primary-trigger,
+  .btn-routine {
+    width: 100%;
+    justify-content: center;
+    font-size: 10px;
+  }
+  /* Table to Cards Conversion on Mobile */
+  .responsive-diet-table thead, .responsive-workout-table thead, .responsive-study-table thead {
+    display: none;
+  }
+
+  .responsive-diet-table, .responsive-diet-table tbody, .responsive-diet-table tr, .responsive-diet-table td,
+  .responsive-workout-table, .responsive-workout-table tbody, .responsive-workout-table tr, .responsive-workout-table td,
+  .responsive-study-table, .responsive-study-table tbody, .responsive-study-table tr, .responsive-study-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .responsive-diet-table tr, .responsive-workout-table tr, .responsive-study-table tr {
+    margin-bottom: 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: #ffffff;
+    padding: 0.9rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+
+  /* Distinct Accent Left Borders for Mobile Cards */
+  .responsive-diet-table tr { border-left: 4px solid var(--diet-primary); }
+  .responsive-workout-table tr { border-left: 4px solid var(--workout-primary); }
+  .responsive-study-table tr { border-left: 4px solid var(--study-primary); }
+
+  .responsive-diet-table tr.completed-row, .responsive-workout-table tr.completed-row, .responsive-study-table tr.completed-row {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+  }
+
+  .responsive-diet-table td, .responsive-workout-table td, .responsive-study-table td {
+    border: none;
+    padding: 0.35rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .responsive-diet-table td:first-child, .responsive-workout-table td:first-child, .responsive-study-table td:first-child {
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 0.6rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .mobile-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: .75rem;
+  }
+
+  .mobile-card-checkbox {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+  }
+  .badge-tag{
+    font-size: .75rem;
+  }
+
+  .mobile-card-macros {
+    display: flex;
+    gap: 12px;
+    background: #f8fafc;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    width: 100%;
+    margin-top: 4px;
+    justify-content: space-around;
+  }
+ 
+.btn-del{
+  font-size: 12px;
+}
+  .summary-card{
+    padding: 10px;
+  }
+  .summary-card .card-title{
+    font-size: 12px;
+  }
+  .summary-card h3{
+    font-size: 15px;
+  }
+  
+}

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Routine Tracker</title>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- html2pdf.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar-header">
+    <div class="nav-container">
+      <div class="brand">
+        <i class="fa-solid fa-calendar-check"></i>
+        <span>Daily Routine Tracker</span>
+      </div>
+      
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <nav class="nav-menu" id="navMenu">
+        <button class="nav-btn active" data-tab="diet">
+          <i class="fa-solid fa-utensils"></i>
+          <span>Diet</span>
+        </button>
+        <button class="nav-btn" data-tab="workout">
+          <i class="fa-solid fa-dumbbell"></i>
+          <span>Workout</span>
+        </button>
+        <button class="nav-btn" data-tab="study">
+          <i class="fa-solid fa-book-open"></i>
+          <span>Study</span>
+        </button>
+        <!-- Miscellaneous Page Link -->
+        <a href="miscellaneous.html" class="nav-btn" style="text-decoration: none;">
+          <i class="fa-solid fa-folder-open"></i>
+          <span>Miscellaneous</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Global Date Selector & Backup Bar -->
+  <div class="date-bar-container">
+    <div class="date-bar">
+      <div class="date-picker-wrap">
+        <i class="fa-solid fa-calendar-day"></i>
+        <label for="globalDatePicker" class="sr-only">Date</label>
+        <input type="date" id="globalDatePicker">
+      </div>
+      <div class="date-quick-actions">
+        <button id="btnToday" class="btn-today"><i class="fa-solid fa-rotate-left"></i> Today</button>
+        <button id="btnTomorrow" class="btn-today btn-tomorrow"><i class="fa-solid fa-arrow-right"></i> Plan Tomorrow</button>
+        
+        <!-- Data Backup & Restore Action Buttons -->
+        <button onclick="exportBackupData()" class="btn-today" style="background:#e0e7ff; color:#3730a3;" title="Export JSON Data Backup">
+          <i class="fa-solid fa-download"></i> Backup
+        </button>
+        <button onclick="document.getElementById('importBackupInput').click()" class="btn-today" style="background:#d1fae5; color:#065f46;" title="Restore Data from Backup File">
+          <i class="fa-solid fa-upload"></i> Restore
+        </button>
+        <input type="file" id="importBackupInput" accept=".json" style="display: none;" onchange="importBackupData(event)">
+
+        <button onclick="clearAllAppData()" class="btn-danger-sm hide-on-pdf" title="Permanently delete all data across all dates">
+          <i class="fa-solid fa-triangle-exclamation"></i> Master Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main class="app-main">
+
+    <!-- ==================== DIET SECTION ==================== -->
+    <section id="section-diet" class="tab-content active">
+      <div class="pdf-export-area" id="pdf-diet">
+        
+        <div class="section-header">
+          <div>
+            <h2><i class="fa-solid fa-utensils"></i>Diet Tracker</h2>
+            <p class="subtitle">Plan in advance, or load a saved daily routine and check items off.</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn-pdf" onclick="downloadDietPDF()">
+              <i class="fa-solid fa-file-pdf"></i> PDF Download
+            </button>
+          </div>
+        </div>
+
+        <!-- Daily Routine Quick Bar & Actions -->
+        <div class="routine-action-bar hide-on-pdf">
+          <button class="btn-primary-trigger" onclick="openDietModal()">
+            <i class="fa-solid fa-plus-circle"></i> Add Meal / Food Item
+          </button>
+          <button class="btn-routine btn-load-routine" onclick="loadDietRoutine()">
+            <i class="fa-solid fa-download"></i> Load Saved Routine
+          </button>
+          <button class="btn-routine btn-save-routine" onclick="saveCurrentDietAsRoutine()">
+            <i class="fa-solid fa-bookmark"></i> Save Current as Routine
+          </button>
+          <button class="btn-routine btn-reset-routine" onclick="resetDietCompletion()">
+            <i class="fa-solid fa-rotate"></i> Reset Checks
+          </button>
+          <button class="btn-routine btn-clear-day" onclick="clearCurrentDayDiet()">
+            <i class="fa-solid fa-trash-can"></i> Delete Day's Diet
+          </button>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="card-icon cal-color"><i class="fa-solid fa-fire"></i></div>
+            <div class="card-info">
+              <span class="card-title">Total Calories</span>
+              <h3 id="dietTotalCalories">0 kcal</h3>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="card-icon prot-color"><i class="fa-solid fa-drumstick-bite"></i></div>
+            <div class="card-info">
+              <span class="card-title">Total Protein</span>
+              <h3 id="dietTotalProtein">0 g</h3>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="card-icon item-color"><i class="fa-solid fa-list-check"></i></div>
+            <div class="card-info">
+              <span class="card-title">Completed Meals</span>
+              <h3 id="dietCompletedCount">0 / 0</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Items Display Area -->
+        <div class="diet-items-wrapper">
+          <table class="data-table responsive-diet-table">
+            <thead>
+              <tr>
+                <th style="width: 60px;">Done</th>
+                <th>Meal & Details</th>
+                <th>Category</th>
+                <th>Calories</th>
+                <th>Protein</th>
+                <th class="hide-on-pdf" style="width: 70px;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="dietList">
+              <!-- Dynamic Rows / Mobile Cards -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== WORKOUT SECTION ==================== -->
+    <section id="section-workout" class="tab-content">
+      <div class="pdf-export-area" id="pdf-workout">
+        
+        <div class="section-header">
+          <div>
+            <h2><i class="fa-solid fa-dumbbell"></i> Workout Tracker</h2>
+            <p class="subtitle">Log your daily workout plan, sets, and reps.</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn-pdf" onclick="downloadWorkoutPDF()">
+              <i class="fa-solid fa-file-pdf"></i> PDF Download
+            </button>
+          </div>
+        </div>
+
+        <!-- Daily Workout Routine Quick Bar & Actions -->
+        <div class="routine-action-bar hide-on-pdf">
+          <button class="btn-primary-trigger" onclick="openWorkoutModal()">
+            <i class="fa-solid fa-plus-circle"></i> Add Exercise
+          </button>
+          <button class="btn-routine btn-load-routine" onclick="loadWorkoutRoutine()">
+            <i class="fa-solid fa-download"></i> Load Saved Routine
+          </button>
+          <button class="btn-routine btn-save-routine" onclick="saveCurrentWorkoutAsRoutine()">
+            <i class="fa-solid fa-bookmark"></i> Save Current as Routine
+          </button>
+          <button class="btn-routine btn-reset-routine" onclick="resetWorkoutCompletion()">
+            <i class="fa-solid fa-rotate"></i> Reset Checks
+          </button>
+          <button class="btn-routine btn-clear-day" onclick="clearCurrentDayWorkout()">
+            <i class="fa-solid fa-trash-can"></i> Delete Day's Workout
+          </button>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="card-icon item-color"><i class="fa-solid fa-list-check"></i></div>
+            <div class="card-info">
+              <span class="card-title">Total Exercises</span>
+              <h3 id="workoutTotalCount">0</h3>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="card-icon cal-color"><i class="fa-solid fa-layer-group"></i></div>
+            <div class="card-info">
+              <span class="card-title">Total Sets</span>
+              <h3 id="workoutTotalSets">0</h3>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="card-icon prot-color"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="card-info">
+              <span class="card-title">Completed Exercises</span>
+              <h3 id="workoutCompletedCount">0 / 0</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Items Display Area -->
+        <div class="workout-items-wrapper">
+          <table class="data-table responsive-workout-table">
+            <thead>
+              <tr>
+                <th style="width: 60px;">Done</th>
+                <th>Exercise Name</th>
+                <th>Target Muscle</th>
+                <th>Sets</th>
+                <th>Reps</th>
+                <th>Details & Weight</th>
+                <th class="hide-on-pdf" style="width: 70px;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="workoutList">
+              <!-- Dynamic Rows / Mobile Cards -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== STUDY SECTION ==================== -->
+    <section id="section-study" class="tab-content">
+      <div class="pdf-export-area" id="pdf-study">
+        
+        <div class="section-header">
+          <div>
+            <h2><i class="fa-solid fa-book-open"></i> Study Tracker</h2>
+            <p class="subtitle">Track your daily subjects, topics, and targeted study plans.</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn-pdf" onclick="downloadStudyPDF()">
+              <i class="fa-solid fa-file-pdf"></i> PDF Download
+            </button>
+          </div>
+        </div>
+
+        <!-- Daily Study Routine Quick Bar & Actions -->
+        <div class="routine-action-bar hide-on-pdf">
+          <button class="btn-primary-trigger" onclick="openStudyModal()">
+            <i class="fa-solid fa-plus-circle"></i> Add Study Task
+          </button>
+          <button class="btn-routine btn-load-routine" onclick="loadStudyRoutine()">
+            <i class="fa-solid fa-download"></i> Load Saved Routine
+          </button>
+          <button class="btn-routine btn-save-routine" onclick="saveCurrentStudyAsRoutine()">
+            <i class="fa-solid fa-bookmark"></i> Save Current as Routine
+          </button>
+          <button class="btn-routine btn-reset-routine" onclick="resetStudyCompletion()">
+            <i class="fa-solid fa-rotate"></i> Reset Checks
+          </button>
+          <button class="btn-routine btn-clear-day" onclick="clearCurrentDayStudy()">
+            <i class="fa-solid fa-trash-can"></i> Delete Day's Study Tasks
+          </button>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="card-icon item-color"><i class="fa-solid fa-book"></i></div>
+            <div class="card-info">
+              <span class="card-title">Total Topics</span>
+              <h3 id="studyTotalCount">0</h3>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="card-icon cal-color"><i class="fa-solid fa-clock"></i></div>
+            <div class="card-info">
+              <span class="card-title">Total Target Time</span>
+              <h3 id="studyTotalHours">0 hrs</h3>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="card-icon prot-color"><i class="fa-solid fa-check-double"></i></div>
+            <div class="card-info">
+              <span class="card-title">Completed Topics</span>
+              <h3 id="studyCompletedCount">0 / 0</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Items Display Area -->
+        <div class="study-items-wrapper">
+          <table class="data-table responsive-study-table">
+            <thead>
+              <tr>
+                <th style="width: 60px;">Done</th>
+                <th>Subject</th>
+                <th>Topic / Task Details</th>
+                <th>Priority</th>
+                <th>Target Time</th>
+                <th class="hide-on-pdf" style="width: 70px;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="studyList">
+              <!-- Dynamic Rows / Mobile Cards -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- DIET ADD MEAL MODAL POPUP -->
+  <div class="modal-overlay" id="dietModalOverlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-utensils"></i> Add New Meal Item</h3>
+        <button class="modal-close-btn" onclick="closeDietModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="dietForm" class="modal-form">
+        <div class="form-group">
+          <label for="dietMealName">Meal Name *</label>
+          <input type="text" id="dietMealName" placeholder="e.g. Oats, Banana , Milk " required>
+        </div>
+        <div class="form-group">
+          <label for="dietCategory">Category / Time</label>
+          <select id="dietCategory">
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Snack">Snack</option>
+            <option value="Dinner">Dinner</option>
+            <option value="Dinner">Uchnti</option>
+          </select>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="dietCalories">Calories (kcal)</label>
+            <input type="number" id="dietCalories" min="0" placeholder="e.g. 350">
+          </div>
+          <div class="form-group">
+            <label for="dietProtein">Protein (g)</label>
+            <input type="number" id="dietProtein" min="0" step="0.1" placeholder="e.g. 25">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="dietNotes">Details / Ingredients Note</label>
+          <input type="text" id="dietNotes" placeholder="e.g. 250ml milk + 50g oats + 1 tbsp peanut butter">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" onclick="closeDietModal()">Cancel</button>
+          <button type="submit" class="btn-add"><i class="fa-solid fa-check"></i> Add Meal Entry</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- WORKOUT ADD EXERCISE MODAL POPUP -->
+  <div class="modal-overlay" id="workoutModalOverlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-dumbbell"></i> Add New Exercise</h3>
+        <button class="modal-close-btn" onclick="closeWorkoutModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="workoutForm" class="modal-form">
+        <div class="form-group">
+          <label for="workoutName">Exercise Name *</label>
+          <input type="text" id="workoutName" placeholder="e.g. Bench Press, Squats, Pull-ups" required>
+        </div>
+        <div class="form-group">
+          <label for="workoutMuscle">Muscle Group</label>
+          <select id="workoutMuscle">
+            <option value="Chest">Chest</option>
+            <option value="Back">Back</option>
+            <option value="Legs">Legs</option>
+            <option value="Shoulders">Shoulders</option>
+            <option value="Arms">Arms</option>
+            <option value="Core">Core</option>
+            <option value="Cardio">Cardio</option>
+          </select>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="workoutSets">Sets</label>
+            <input type="number" id="workoutSets" min="1" placeholder="e.g. 4">
+          </div>
+          <div class="form-group">
+            <label for="workoutReps">Reps</label>
+            <input type="text" id="workoutReps" placeholder="e.g. 10-12 or 15">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="workoutNotes">Weight & Extra Details</label>
+          <input type="text" id="workoutNotes" placeholder="e.g. 60kg, rest 60s between sets">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" onclick="closeWorkoutModal()">Cancel</button>
+          <button type="submit" class="btn-add"><i class="fa-solid fa-check"></i> Add Exercise</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- STUDY ADD TASK MODAL POPUP -->
+  <div class="modal-overlay" id="studyModalOverlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-book-open"></i> Add New Study Task</h3>
+        <button class="modal-close-btn" onclick="closeStudyModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="studyForm" class="modal-form">
+        <div class="form-group">
+          <label for="studySubject">Subject *</label>
+          <input type="text" id="studySubject" placeholder="e.g. Mathematics, Physics, JavaScript" required>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="studyPriority">Priority</label>
+            <select id="studyPriority">
+              <option value="High">High</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="studyHours">Target Duration (Hours)</label>
+            <input type="number" id="studyHours" min="0" step="0.5" placeholder="e.g. 1.5">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="studyTopic">Topic / Details *</label>
+          <input type="text" id="studyTopic" placeholder="e.g. Chapter 4 Integration, Solve 20 questions" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" onclick="closeStudyModal()">Cancel</button>
+          <button type="submit" class="btn-add"><i class="fa-solid fa-check"></i> Add Study Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modular Scripts -->
+  <script src="js/app.js"></script>
+  <script src="js/diet.js"></script>
+  <script src="js/workout.js"></script>
+  <script src="js/study.js"></script>
+</body>
+</html>

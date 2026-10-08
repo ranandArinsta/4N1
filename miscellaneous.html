@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Miscellaneous Hub - Time Routine</title>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="miscellaneous.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar-header">
+    <div class="nav-container">
+      <div class="brand">
+        <i class="fa-solid fa-clock-rotate-left" style="color: #d97706;"></i>
+        <span>Miscellaneous Hub</span>
+      </div>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <nav class="nav-menu" id="navMenu">
+        <a href="index.html" class="nav-btn" onclick="localStorage.setItem('tracker_active_tab', 'diet')">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Back to Tracker</span>
+        </a>
+        <a href="miscellaneous.html" class="nav-btn active-misc" style="text-decoration: none;">
+          <i class="fa-solid fa-folder-open"></i>
+          <span>Miscellaneous</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <section class="tab-content active">
+      <div class="section-header">
+        <div>
+          <h2 style="color: #d97706;"><i class="fa-solid fa-business-time"></i> Daily Time Routine Schedule</h2>
+          <p class="subtitle">Aapka daily fixed schedule tracking, custom slots & live active status.</p>
+        </div>
+      </div>
+
+      <!-- Live Current Time Banner -->
+      <div class="current-time-banner">
+        <div class="time-live-indicator">
+          <i class="fa-solid fa-clock pulse-icon-amber"></i>
+          <span>Current Time: <strong id="liveClock">00:00:00 AM</strong></span>
+        </div>
+        <div class="active-status-tag-amber" id="currentTaskStatus">
+          Status Loading...
+        </div>
+      </div>
+
+      <!-- Action Quick Bar -->
+      <div class="routine-action-bar">
+        <button class="btn-amber-trigger" onclick="openMiscModal()">
+          <i class="fa-solid fa-plus-circle"></i> Add Custom Time Slot
+        </button>
+        <button class="btn-routine btn-reset-routine" onclick="resetDefaultRoutine()">
+          <i class="fa-solid fa-rotate-left"></i> Reset to Default Routine
+        </button>
+      </div>
+
+      <!-- Schedule Table Card Container -->
+      <div class="misc-content-card">
+        <div class="table-container">
+          <table class="data-table responsive-misc-table">
+            <thead>
+              <tr>
+                <th style="width: 180px;">Time Slot</th>
+                <th>Activity / Task</th>
+                <th>Category</th>
+                <th style="width: 120px;">Status</th>
+                <th style="width: 70px;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="routineTableBody">
+              <!-- Dynamic Rows / Mobile Cards -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- EASY TIME SELECTION MODAL POPUP -->
+  <div class="modal-overlay" id="miscModalOverlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-clock"></i> Add New Time Slot</h3>
+        <button class="modal-close-btn" onclick="closeMiscModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="miscForm" class="modal-form">
+        <div class="form-group">
+          <label for="slotTask">Activity / Task Name *</label>
+          <input type="text" id="slotTask" placeholder="e.g. Nap Time, Gaming, Evening Walk" required>
+        </div>
+        
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="slotStartTime">Start Time *</label>
+            <input type="time" id="slotStartTime" required>
+          </div>
+          <div class="form-group">
+            <label for="slotEndTime">End Time *</label>
+            <input type="time" id="slotEndTime" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="slotCategory">Category</label>
+          <select id="slotCategory">
+            <option value="Personal">Personal</option>
+            <option value="Work">Work</option>
+            <option value="Rest">Rest</option>
+            <option value="Learning">Learning</option>
+            <option value="Fitness">Fitness</option>
+            <option value="Leisure">Leisure</option>
+          </select>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" onclick="closeMiscModal()">Cancel</button>
+          <button type="submit" class="btn-add-amber"><i class="fa-solid fa-check"></i> Add Time Slot</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="miscellaneous.js"></script>
+</body>
+</html>
